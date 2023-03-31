@@ -1,0 +1,17 @@
+﻿@model ApplicationUser
+<div class="container p-3" style="background-color:lightgray;">
+    <div class="form-control mb-2 border">
+        <input class="form-control" type="hidden" value="@ViewBag.Email" id="email" />
+
+            <div class="col-6">
+                <label> Reason </label>
+            <input class="form-control" type="text" id="Reason" />
+
+            </div>           
+            <div class="mb-2">
+                <br />
+            <button class="btn btn-info" onclick="rejectData(Reason)"> Save </button>
+            </div>
+
+    </div>
+</div>

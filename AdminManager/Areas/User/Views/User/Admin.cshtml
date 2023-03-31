@@ -1,0 +1,156 @@
+﻿
+@{
+    ViewData["Title"] = "Dealers";
+}
+
+
+<div class=" row pt-4">
+    <div class="col-6">
+        <h1></h1>
+    </div>
+@*    <div class="col-6 text-end">
+        <a asp-area="User" asp-controller="User" asp-action="Logout" class=" btn btn-dark">
+            <i class="bi bi-person-plus-fill"></i> &nbsp; Logout
+        </a>
+    </div>*@
+</div>
+
+
+<div class="container p-3">
+    <div class=" row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Dealer List</h2>
+        </div>
+        </div>
+    <br /><br />
+
+
+    <table class="table table-bordered table-striped" style="width:100%">
+        <thead>
+            <tr>
+                <th>
+                    Dealer Name
+                </th>
+                <th>
+                    Email
+                </th>
+                <th>
+                    Statustype
+                </th>
+                <th></th>
+            </tr>
+
+        </thead>
+        <tbody>
+            @foreach (var obj in Model)
+            {
+                <tr>
+                    <td width="50%">
+                        @obj.UserName
+                    </td>
+                    <td width="30%">
+                        @obj.Email
+                    </td>
+                    <td width="30%">
+                        @obj.StatusType
+                    </td>
+                    <td>
+
+                        @if (obj.StatusType == SType.Pending.ToString())
+                        {
+                            <div class="w-75 btn-group" role="group">
+                                <a asp-area="User" asp-controller="User" asp-action="Approve" asp-route-data="@obj.Email"
+                           class="btn btn-outline-success mx-2"> <i class="bi bi-pencil-square"></i> Approve </a>
+
+                                <button type="button" onclick="addpopup('@obj.Email')" class="btn btn-outline-secondary">Reject</button>
+                               @* <a asp-area="User" asp-controller="User" asp-action="Reject" asp-route-data="@obj.UserName"
+                           class="btn btn-outline-secondary mx-2"> <i class="bi bi-trash-fill"></i> Reject</a>*@
+                            </div>
+                        }
+                        else if (obj.StatusType == SType.Blocked.ToString())
+                        {
+                            <div class="w-75 btn-group" role="group">
+                                <a asp-area="User" asp-controller="User" asp-action="UnBlock" asp-route-data="@obj.Email"
+                           class="btn btn-outline-success mx-2"> <i class="bi bi-pencil-square"></i> UnBlock </a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="w-75 btn-group" role="group">
+                                <a asp-area="User" asp-controller="User" asp-action="Block" asp-route-data="@obj.Email"
+                           class="btn btn-outline-danger mx-2"> <i class="bi bi-pencil-square"></i> Block </a>
+                            </div>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@*<div>
+      <div class="p-3">
+        <a asp-area="User" asp-controller="User" asp-action="SuperAdmin" class=" btn btn-dark  text-md-center">
+            <i class="bi bi-person-plus-fill"></i> &nbsp; Back 
+        </a>
+    </div>
+</div>*@
+
+
+<div id="modelpopup" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id="mymodelcontent">
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+    {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
+<script>
+    function addpopup(email) {
+
+
+        $.ajax({
+            url: '/User/User/Popup',
+            type: "GET",
+            data: "email=" + email,
+            success: function (result) {
+
+                $("#mymodelcontent").html(result);
+                $("#modelpopup").show();
+            },
+            error: function (err) {
+                console.log(err);
+
+            }
+        });
+    }
+    function rejectData(Reason) {
+        debugger;
+        var email = document.getElementById("email").value;
+        var Reason = document.getElementById("Reason").value;
+
+        $.ajax({
+            url: '/User/User/Reject',
+            type: "POST",
+            data: { 'email': email, 'Reason': Reason },
+            success: function (result) {
+                debugger;
+                console.log(result);
+                $("body").html(result);
+            },
+            error: function (err) {
+                debugger;
+                console.log(err);
+
+            }
+        });
+
+    }
+
+</script>

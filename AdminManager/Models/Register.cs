@@ -13,6 +13,9 @@ namespace AdminManager.Models
 
         [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
-
+        public string? City { get; set; }
+        public string? State { get; set; }
+        public int PinCode { get; set; }  
+        public string? PhoneNumber { get; set; }
     }
 }

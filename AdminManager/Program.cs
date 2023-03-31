@@ -1,5 +1,6 @@
 using AdminManager.Authentication;
 using AdminManager.Data;
+using AdminManager.Models.Email;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -17,6 +20,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseMySQL(
     builder.Configuration.GetConnectionString("ConnStr")
     ));
 
+//Cookie
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 // For Identity  
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -45,7 +50,12 @@ builder.Services.AddAuthentication(options =>
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))
                 };
             });
-
+var emailConfig = builder.Configuration
+        .GetSection("EmailConfiguration")
+        .Get<EmailConfiguration>();
+builder.Services.AddSingleton(emailConfig);
+builder.Services.AddScoped<IEmailSender, EmailSender>();
+builder.Services.AddControllers();
 
 var app = builder.Build();
 

@@ -1,4 +1,13 @@
-﻿<!DOCTYPE html>
+﻿@using AdminManager.Authentication
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{
+    var user = Context.Request.Cookies["user"];
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -25,12 +34,24 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="Customer" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="User" asp-controller="User" asp-action="Login">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="User" asp-controller="User" asp-action="Register">Register</a>
-                        </li>
+                        @if (user == null || user == "")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-primary" asp-area="User" asp-controller="User" asp-action="Login">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-primary" asp-area="User" asp-controller="User" asp-action="RegisterDealers">Register-Dealer</a>
+                            </li>
+                                <li class="nav-item">
+                                <a class="nav-link text-primary" asp-area="User" asp-controller="User" asp-action="RegisterUsers">Register-User</a>
+                            </li>
+                        }
+                        else if (user != null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-danger" asp-area="User" asp-controller="User" asp-action="Logout">Logout</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
