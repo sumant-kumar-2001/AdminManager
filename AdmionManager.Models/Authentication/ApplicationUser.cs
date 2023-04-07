@@ -10,7 +10,7 @@ namespace AdminManager.Authentication
         public int? PinCode { get; set; }
         public string? IsActive { get; set; }
         public SType? StatusType { get; set; }
-        public string Reason { get; set; }
+        public string? Reason { get; set; }
 
     }
 }

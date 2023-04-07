@@ -4,14 +4,16 @@
     ViewData["Title"] = "AddAdmin";
 }
 
-<h1>AddAdmin</h1>
-
 <form asp-action="AddAdmin" method="post">
 
-    <div class="container text-center">
+    <div class="border p-3 mt-4  ">
+        <div class="row pb-2">
+            <h2 class="text-primary">Add Admim </h2>
+            <hr />
+        </div>
         <div class="mb-3">
             <label asp-for="Username"></label>
-            <input asp-for="Username" class="form-control" />
+            <input asp-for="Username" class="form-control" required />
             <span asp-validation-for="Username" class="text-danger"></span>
         </div>
         <br />
@@ -52,7 +54,6 @@
         <br />
         <div class="container" style="background-color:#f1f1f1">
             <button type="button" class="cancelbtn">Cancel</button>
-            <span class="psw">Forgot <a href="#">password?</a></span>
         </div>
     </div>
 

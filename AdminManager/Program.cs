@@ -1,10 +1,10 @@
 using AdminManager.Authentication;
 using AdminManager.Data;
 using AdminManager.Models.Email;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+//using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
+//using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,7 +21,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseMySQL(
     ));
 
 //Cookie
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+//builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+//Session
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(1);
+});
 
 // For Identity  
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -29,27 +35,27 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddDefaultTokenProviders();
 
 // Adding Authentication  
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-})
+//builder.Services.AddAuthentication(options =>
+//{
+//    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+//    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+//    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+//})
 
-            // Adding Jwt Bearer  
-            .AddJwtBearer(options =>
-            {
-                options.SaveToken = true;
-                options.RequireHttpsMetadata = false;
-                options.TokenValidationParameters = new TokenValidationParameters()
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidAudience = Configuration["JWT:ValidAudience"],
-                    ValidIssuer = Configuration["JWT:ValidIssuer"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))
-                };
-            });
+            //// Adding Jwt Bearer  
+            //.AddJwtBearer(options =>
+            //{
+            //    options.SaveToken = true;
+            //    options.RequireHttpsMetadata = false;
+            //    options.TokenValidationParameters = new TokenValidationParameters()
+            //    {
+            //        ValidateIssuer = true,
+            //        ValidateAudience = true,
+            //        ValidAudience = Configuration["JWT:ValidAudience"],
+            //        ValidIssuer = Configuration["JWT:ValidIssuer"],
+            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))
+            //    };
+            //});
 var emailConfig = builder.Configuration
         .GetSection("EmailConfiguration")
         .Get<EmailConfiguration>();
@@ -69,7 +75,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+app.UseSession();
 app.UseRouting();
 app.UseAuthentication();
 

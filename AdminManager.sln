@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminManager", "AdminManager\AdminManager.csproj", "{04A0D0C0-9009-4DE1-A4EC-E86BACCA19CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminManager", "AdminManager\AdminManager.csproj", "{04A0D0C0-9009-4DE1-A4EC-E86BACCA19CF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminManager.DAL", "AdminManager.DAL\AdminManager.DAL.csproj", "{D963A4A4-B422-444B-A1D8-92F3CED4C50A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminManager.Models", "AdmionManager.Models\AdminManager.Models.csproj", "{58969C52-E538-4AB4-8CAD-7CC87C80F7B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{04A0D0C0-9009-4DE1-A4EC-E86BACCA19CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04A0D0C0-9009-4DE1-A4EC-E86BACCA19CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04A0D0C0-9009-4DE1-A4EC-E86BACCA19CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D963A4A4-B422-444B-A1D8-92F3CED4C50A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D963A4A4-B422-444B-A1D8-92F3CED4C50A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D963A4A4-B422-444B-A1D8-92F3CED4C50A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D963A4A4-B422-444B-A1D8-92F3CED4C50A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58969C52-E538-4AB4-8CAD-7CC87C80F7B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58969C52-E538-4AB4-8CAD-7CC87C80F7B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58969C52-E538-4AB4-8CAD-7CC87C80F7B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58969C52-E538-4AB4-8CAD-7CC87C80F7B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

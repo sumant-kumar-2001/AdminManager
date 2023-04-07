@@ -10,7 +10,7 @@
     <div class="container text-center">
         <div class="mb-3">
             <label asp-for="Username"></label>
-            <input asp-for="Username" class="form-control" />
+            <input asp-for="Username" class="form-control" required />
             <span asp-validation-for="Username" class="text-danger"></span>
         </div>
         <br />
@@ -50,8 +50,7 @@
         </div>
         <br />
         <div class="container" style="background-color:#f1f1f1">
-            <button type="button" class="cancelbtn">Cancel</button>
-            <span class="psw">Forgot <a href="#">password?</a></span>
+            <button type="button" class="cancelbtn">Cancel</button>         
         </div>
     </div>
 

@@ -1,38 +1,22 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Areas\User\Controllers\ouaxk3ou.5tt~" />
-    <None Remove="Areas\User\Controllers\UserController.cs~RF571484c4.TMP" />
-    <None Remove="Areas\User\Views\Product\cbijuru0.mig~" />
-    <None Remove="Areas\User\Views\User\oojcwlrp.nql~" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.15" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.15">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.13" />
     <PackageReference Include="MySql.Data" Version="8.0.32.1" />
     <PackageReference Include="MySql.EntityFrameworkCore" Version="6.0.10" />
     <PackageReference Include="NETCore.MailKit" Version="2.1.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\AdminManager.DAL\AdminManager.DAL.csproj" />
-    <ProjectReference Include="..\AdmionManager.Models\AdminManager.Models.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\Images\Products\" />
   </ItemGroup>
 
 </Project>

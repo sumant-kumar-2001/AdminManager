@@ -5,7 +5,8 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 @{
-    var user = Context.Request.Cookies["user"];
+    //var user = Context.Request.Cookies["user"];
+    var user = Context.Session.GetString("user");
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -34,7 +35,7 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="Customer" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        @if (user == null || user == "")
+                        @if (user == null || user =="")
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-primary" asp-area="User" asp-controller="User" asp-action="Login">Login</a>
@@ -49,7 +50,9 @@
                         else if (user != null)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-danger" asp-area="User" asp-controller="User" asp-action="Logout">Logout</a>
+                                <a class="nav-link text-danger" asp-area="User" asp-controller="User" asp-action="Logout"> 
+                                    Logout</a>
+                                
                             </li>
                         }
                     </ul>

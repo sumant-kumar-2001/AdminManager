@@ -3,15 +3,20 @@
     ViewData["Title"] = "Login";
 }
 
-<h1>Login</h1>
 
 <form asp-action="LoginUser" method="post">
+    <div class="border p-3 mt-4 " style="width:50%; ">
+        <div class="row pb-2">
+            <h2 class="text-primary">Login </h2>
+            <hr/>
 
-    <div class="container text-center">
+        </div>
+
+  
         <div class="mb-3">
-                   <label asp-for="Username"></label>
-               <input asp-for="Username" class="form-control" />
-               <span asp-validation-for="Username" class="text-danger"></span>
+                   <label asp-for="Email"></label>
+               <input asp-for="Email" class="form-control" required/>
+               <span asp-validation-for="Email" class="text-danger"></span>
         </div>
         <br/>
         <div class="mb-3" >      
@@ -21,16 +26,14 @@
       
         </div>
         <br/>
-        <div>
-        <button type="submit">Login</button>
-        <label>
+        <div class="col-12">
+        <button type="submit" class="btn btn-outline-primary">Login</button>
+        <label class="btn-outline-info">
             <input type="checkbox" checked="checked" name="remember"> Remember me
         </label>
-        </div>
-        <br/>
-        <div class="container" style="background-color:#f1f1f1">
-            <button type="button" class="cancelbtn">Cancel</button>
-            <span class="psw">Forgot <a href="#">password?</a></span>
+        @*<div class="container" style="background-color:#f1f1f1">*@
+            <button type="button" class="cancelbtn btn btn-outline-danger">Cancel</button>
+            <a href="#">Forgot password?</a>
         </div>
     </div>
    

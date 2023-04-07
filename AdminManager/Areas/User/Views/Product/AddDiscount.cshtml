@@ -1,0 +1,45 @@
+﻿@model AdminManager.Models.Discount
+@{
+    ViewData["Title"] = "AddDiscount";
+}
+
+<h1>AddDiscount</h1>
+
+<form asp-action="AddDiscount" method="post">
+    <div>
+    <div class="container text-center">
+        <div class="mb-3">
+            <label asp-for="ValidFrom"></label>
+            <input asp-for="ValidFrom" class="form-control" />
+            <span asp-validation-for="ValidFrom" class="text-danger"></span>
+        </div>
+        <br />
+        <div class="mb-3">
+            <label asp-for="ValidTo"></label>
+            <input  asp-for="ValidTo" class="form-control" required />
+            <span asp-validation-for="ValidTo" class="text-danger"></span>
+        </div>
+        <div class="mb-3 ">
+                        <label asp-for="DiscountType"></label>
+                    <select asp-for="DiscountType" class="form-select">
+                            <option selected>--Select Type--</option>
+                           <option value="Fixed Amount">Fixed Amount</option>
+                            <option value="Percentage">Percentage</option>
+                        </select>
+                    <span asp-validation-for="DiscountType" class="text-danger"></span>
+                </div>
+        <div class="mb-3">
+
+            <label asp-for="DiscountAmount"></label>
+            <input  asp-for="DiscountAmount" class="form-control" required />
+            <span asp-validation-for="DiscountAmount" class="text-danger"></span>
+        </div>
+            <button type="submit" class="btn btn-primary">Add-Discount</button>
+        </div>
+        <br />
+        <div class="container" style="background-color:#f1f1f1">
+            <button type="button" class="cancelbtn">Cancel</button>
+        </div>
+    </div>
+
+</form>

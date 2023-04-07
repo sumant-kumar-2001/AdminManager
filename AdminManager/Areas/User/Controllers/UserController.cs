@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
+//using Microsoft.IdentityModel.Tokens;
+using System.Dynamic;
+//using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
@@ -25,7 +26,7 @@ namespace AdminManager.Areas.Customer.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public UserController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager,
-            IConfiguration configuration, SignInManager<ApplicationUser> signInManager, ApplicationDbContext context, 
+            IConfiguration configuration, SignInManager<ApplicationUser> signInManager, ApplicationDbContext context,
             IEmailSender emailSender, IHttpContextAccessor httpContextAccessor)
         {
             this.signInManager = signInManager;
@@ -37,7 +38,7 @@ namespace AdminManager.Areas.Customer.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task <IActionResult> Admin()
+        public async Task<IActionResult> Admin()
         {
             IEnumerable<DealerVM> dealers;
             dealers = (from user in _context.ApplicationUsers
@@ -88,42 +89,76 @@ namespace AdminManager.Areas.Customer.Controllers
 
         public IActionResult Dealer()
         {
-            return View();
+
+
+            IEnumerable<Product> products;
+            products = (from product in _context.Products
+                        where product.UserId == HttpContext.Session.GetString("UserId")
+                        select (new Product
+                        {
+                            ProductId = product.ProductId,
+                            Name = product.Name,
+                            Price = product.Price,
+                            IsActive = product.IsActive,
+                            Quantity = product.Quantity,
+                        }));
+
+            return View(products);
         }
 
-        public async Task <IActionResult> SuperAdmin()
+
+
+        public IActionResult Allproduct()
         {
 
-                IEnumerable<DealerVM> dealers;
-                dealers = (from user in _context.ApplicationUsers
-                           join userrole in _context.UserRoles on user.Id equals userrole.UserId
-                           join role in _context.Roles on userrole.RoleId equals role.Id
-                           where (role.Name == "Admin")
-                           select (new DealerVM
-                           {
-                               UserName = user.UserName,
-                               Role = role.Name,
-                               Email = user.Email,
-                               StatusType = user.StatusType.ToString()
 
-                           }));
+            IEnumerable<Product> products;
+            products = (from product in _context.Products
+                        select (new Product
+                        {
+                            ProductId = product.ProductId,
+                            Name = product.Name,
+                            Price = product.Price,
+                            IsActive = product.IsActive,
+                            Quantity = product.Quantity,
+                        }));
 
-
-
-                //var dealers = await _context.Users
-                //    .Join(_context.UserRoles, u => u.Id, ur => ur.UserId, (u, ur) => new { User = u, RoleId = ur.RoleId })
-                //    .Join(_context.Roles, ur => ur.RoleId, r => r.Id, (ur, r) => new { User = ur.User, Role = r })
-                //    .Where(ur =>ur.Role.Name == "Dealer")
-                //    .Select(ur => new DealerVM
-                //    {
-                //        UserName = ur.User.UserName,
-                //        Role = ur.Role.Name,
-                //        StatusType = ur.User.StatusType.ToString(),
-
-                //    }).ToListAsync();
-                return View(dealers);
-           
+            return View(products);
         }
+
+
+
+
+        [HttpGet]
+        public IActionResult SuperAdmin()
+        {
+            var User = HttpContext.Session.GetString("user");
+
+            if (User == null)
+            {
+                return View("Page");
+            }
+
+            IEnumerable<DealerVM> admin;
+            admin = (from user in _context.ApplicationUsers
+                     join userrole in _context.UserRoles on user.Id equals userrole.UserId
+                     join role in _context.Roles on userrole.RoleId equals role.Id
+                     where (role.Name == "Admin")
+                     select (new DealerVM
+                     {
+                         UserName = user.UserName,
+                         Email = user.Email,
+                         PhoneNumber = user.PhoneNumber,
+
+                     }));
+
+            return View(admin);
+        }
+
+
+
+
+
 
         public IActionResult RegisterDealers()
         {
@@ -138,29 +173,69 @@ namespace AdminManager.Areas.Customer.Controllers
         [HttpPost]
         public async Task<IActionResult> LoginUser(Login model)
         {
-            var user = await userManager.FindByEmailAsync(model.Username);
-          //  var result = await signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
-            var result = await signInManager.PasswordSignInAsync(user.UserName, model.Password, false, true);
+            var user = await userManager.FindByEmailAsync(model.Email);
+            //  var result = await signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
+            var result = await signInManager.PasswordSignInAsync(user.UserName, model.Password, false, false);
             var userRoles = await userManager.GetRolesAsync(user);
-            var currentrole =  userRoles.FirstOrDefault();
+            var currentrole = userRoles.FirstOrDefault();
+
+
+            //ViewBag.UserRole = currentrole;
+            //dynamic data = new ExpandoObject();
+            //HttpContext.Response.Cookies.Append("user", user.UserName);
+            //if (currentrole == "SuperAdmin")
+            //{
+            //    data.dealer = await userManager.GetUsersInRoleAsync("Dealer");
+            //    data.admin = await userManager.GetUsersInRoleAsync("Admin");
+            //}
+            //if (currentrole == "Admin")
+            //{
+            //    data.dealer = await userManager.GetUsersInRoleAsync("Dealer");
+            //}
+            //if (result.Succeeded)
+            //{
+            //    return View("DashBoard", data);
+            //}
+            //return Ok("InValid");
+
+
             if (result.Succeeded)
             {
-                HttpContext.Response.Cookies.Append("user", user.UserName);
-                if (currentrole.Equals("SuperAdmin"))
+                // HttpContext.Response.Cookies.Append("user", user.UserName);
+                HttpContext.Session.SetString("user", user.UserName);
+                HttpContext.Session.SetString("UserId", user.Id);
+                HttpContext.Session.SetString("UserRole", currentrole);
+
+                if (currentrole.Equals("SuperAdmin") || currentrole.Equals("Admin") || currentrole.Equals("User") || currentrole.Equals("Dealer"))
                 {
-                    return RedirectToAction(currentrole.ToString());
+                    if (currentrole.Equals("Dealer"))
+                    {
+                        if (user.StatusType == SType.Approved)
+                        {
+                            return RedirectToAction(currentrole.ToString());
+                        }
+                        else
+                        {
+                            HttpContext.Session.Clear();
+                            return View("Page");
+                        }
+                    }
+                    else
+                    {
+                        return RedirectToAction(currentrole.ToString());
+                    }
                 }
-                else if (userRoles.Contains("Admin"))
-                {
-                    return RedirectToAction("Admin");
-                }
-                else if (userRoles.Contains("Dealer"))
-                {
-                    return RedirectToAction("Dealer");
-                }
+                //else if (userRoles.Contains("Admin"))
+                //{
+                //    return RedirectToAction("Admin");
+                //}
+                //else if (userRoles.Contains("Dealer"))
+                //{
+                //    return RedirectToAction("Dealer");
+                //}
 
             }
-           return RedirectToAction("Login");
+            return RedirectToAction("Login");
         }
 
 
@@ -171,7 +246,7 @@ namespace AdminManager.Areas.Customer.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Register( Register model)
+        public async Task<IActionResult> Register(Register model)
         {
             var userExists = await userManager.FindByNameAsync(model.Username);
             if (userExists != null)
@@ -197,63 +272,87 @@ namespace AdminManager.Areas.Customer.Controllers
         [Route("register-Dealer")]
         public async Task<IActionResult> RegisterDealer(Register model)
         {
-            var userExists = await userManager.FindByNameAsync(model.Username);
-            if (userExists != null)
-                return Ok("User already exists!");
+            if (ModelState.IsValid)
+            {
+                var userExists = await userManager.FindByNameAsync(model.Username);
+                if (userExists != null)
+                    return Ok("User already exists!");
 
-            ApplicationUser user = new ApplicationUser()
-            {
-                Email = model.Email,
-                SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = model.Username,
-                City = model.City,
-                State = model.State,
-                PhoneNumber = model.PhoneNumber,
-                PinCode = model.PinCode,
-                StatusType = SType.Pending,
-                IsActive = false.ToString(),
-            };
-            var result = await userManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded)
-                return Ok("User creation failed! Please check user details and try again.");
-          
-            if (await roleManager.RoleExistsAsync(UserRoles.Dealer))
-            {
-                await userManager.AddToRoleAsync(user, UserRoles.Dealer);
+                ApplicationUser user = new ApplicationUser()
+                {
+                    Email = model.Email,
+                    SecurityStamp = Guid.NewGuid().ToString(),
+                    UserName = model.Username,
+                    City = model.City,
+                    State = model.State,
+                    PinCode = model.PinCode,
+                    PhoneNumber = model.PhoneNumber,
+                    StatusType = SType.Pending
+
+                };
+
+
+                var result = await userManager.CreateAsync(user, model.Password);
+                if (!result.Succeeded)
+                    return Ok("User creation failed! Please check user details and try again.");
+
+                //if (!await roleManager.RoleExistsAsync(UserRoles.Admin))
+                //    await roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
+                //if (!await roleManager.RoleExistsAsync(UserRoles.User))
+                //    await roleManager.CreateAsync(new IdentityRole(UserRoles.User));
+                //if (!await roleManager.RoleExistsAsync(UserRoles.SuperAdmin))
+                //    await roleManager.CreateAsync(new IdentityRole(UserRoles.SuperAdmin));
+                //if (!await roleManager.RoleExistsAsync(UserRoles.Dealer))
+                //    await roleManager.CreateAsync(new IdentityRole(UserRoles.Dealer));
+
+                if (await roleManager.RoleExistsAsync(UserRoles.Dealer))
+                {
+                    await userManager.AddToRoleAsync(user, UserRoles.Dealer);
+                }
+                return Ok("Dealer created successfully!");
+
             }
+            return View("RegisterDealers");
 
-            return Ok("User created successfully!");
+
         }
 
 
-        [HttpPost]
+
         [Route("register-User")]
         public async Task<IActionResult> RegisterUser(Register model)
         {
-            var userExists = await userManager.FindByNameAsync(model.Username);
-            if (userExists != null)
-                return Ok("User already exists!");
-
-            ApplicationUser user = new ApplicationUser()
+            if (ModelState.IsValid)
             {
-                Email = model.Email,
-                SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = model.Username,
-                City = model.City,
-                State = model.State,
-                PhoneNumber = model.PhoneNumber,
-                PinCode = model.PinCode,
-            };
-            var result = await userManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded)
-                return Ok("User creation failed! Please check user details and try again.");
+                var userExists = await userManager.FindByNameAsync(model.Username);
+                if (userExists != null)
+                    return Ok("User already exists!");
 
-            if (await roleManager.RoleExistsAsync(UserRoles.User))
-            {
-                await userManager.AddToRoleAsync(user, UserRoles.User);
+                ApplicationUser user = new ApplicationUser()
+                {
+                    Email = model.Email,
+                    SecurityStamp = Guid.NewGuid().ToString(),
+                    UserName = model.Username,
+                    City = model.City,
+                    State = model.State,
+                    PhoneNumber = model.PhoneNumber,
+                    PinCode = model.PinCode,
+                };
+                var result = await userManager.CreateAsync(user, model.Password);
+                if (!result.Succeeded)
+                    return Ok("User creation failed! Please check user details and try again.");
+
+                if (await roleManager.RoleExistsAsync(UserRoles.User))
+                {
+                    await userManager.AddToRoleAsync(user, UserRoles.User);
+                }
+
+                return Ok("User created successfully!");
             }
-
-            return Ok("User created successfully!");
+            else
+            {
+                return View("RegisterUsers");
+            }
         }
 
 
@@ -292,7 +391,7 @@ namespace AdminManager.Areas.Customer.Controllers
                 await userManager.AddToRoleAsync(user, UserRoles.Admin);
             }
 
-            return Ok("Admin created successfully!");
+            return RedirectToAction("SuperAdmin");
         }
 
 
@@ -343,8 +442,8 @@ namespace AdminManager.Areas.Customer.Controllers
         public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();
-            HttpContext.Response.Cookies.Delete("user");
-
+            //HttpContext.Response.Cookies.Delete("user");
+            HttpContext.Session.Clear();
             return RedirectToAction("Login");
         }
 

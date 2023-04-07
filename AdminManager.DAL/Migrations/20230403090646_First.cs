@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using MySql.EntityFrameworkCore.Metadata;
+//using static System.Data.Entity.Migrations.Model.UpdateDatabaseOperation;
 
 #nullable disable
 
@@ -33,6 +34,12 @@ namespace AdminManager.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "varchar(255)", nullable: false),
+                    City = table.Column<string>(type: "longtext", nullable: true),
+                    State = table.Column<string>(type: "longtext", nullable: true),
+                    PinCode = table.Column<int>(type: "int", nullable: true),
+                    IsActive = table.Column<string>(type: "longtext", nullable: true),
+                    StatusType = table.Column<int>(type: "int", nullable: true),
+                    Reason = table.Column<string>(type: "longtext", nullable: true),
                     UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
@@ -51,6 +58,26 @@ namespace AdminManager.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    ProductId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(type: "longtext", nullable: false),
+                    Description = table.Column<string>(type: "longtext", nullable: false),
+                    IsActive = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    Price = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    ImageUrl = table.Column<string>(type: "longtext", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.ProductId);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -219,6 +246,9 @@ namespace AdminManager.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Products");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

@@ -1,0 +1,198 @@
+﻿@*
+
+@model dynamic
+
+@if (ViewBag.userrole == "SuperAdmin")
+{
+    <div class="container p-3">
+        <div class="row pt-4">
+            <div class="col-6">
+                <h2 class="text-primary">Admin List</h2>
+            </div>
+            <div class="col-6 text-end">
+                @if (ViewBag.userrole == "SuperAdmin")
+                {
+                    <a asp-area="User" asp-controller="User" asp-action="AddAdmin" class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i> &nbsp; Add Admin
+                    </a>
+
+                }
+            </div>
+        </div>
+        <br /> <br />
+
+        <table class="table table-bordered table-striped" style="width:100%">
+            <thead>
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Email
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var obj in Model.admin)
+                {
+                    <tr>
+                        <td width="50%">
+                            @obj.UserName
+                        </td>
+                        <td width="50%">
+                            @obj.Email
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+
+    </div>
+
+    <div id="modelpopup" class="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div id="mymodelcontent">
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+@if (ViewBag.userrole == "SuperAdmin" || ViewBag.userrole == "Admin")
+{
+    <div class="container p-3">
+        <div class="row pt-4">
+            <div class="col-6">
+                <h2 class="text-primary">Dealer list</h2>
+            </div>
+            <div class="col-6 text-end">
+            </div>
+        </div>
+        <br /> <br />
+
+        <table class="table table-bordered table-striped" style="width:100%">
+            <thead>
+                <tr>
+                    <th>
+                        name
+                    </th>
+                    <th>
+                        email
+                    </th>
+
+                    <th>
+                        statustype
+                    </th>
+                    <th>action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var obj in Model.dealer)
+                {
+                    <tr>
+                        <td width="50%">
+                            @obj.UserName
+                        </td>
+                        <td width="50%">
+                            @obj.Email
+                        </td>
+
+                        <td width="30%">
+                            @obj.StatusType
+                        </td>
+                        <td>
+                            @if (obj.StatusType == SType.Pending)
+                            {
+                                <div class="w-75 btn-group" role="group">
+                                    <a asp-controller="user" asp-action="approve" asp-route-st="@obj.Email"
+                                                               class="btn btn-primary mx-2">approve</a>
+                                    <button type="button" onclick="addpopup('@obj.Email')" class="btn btn-sm btn-danger">reject</button>
+                                    @*<a asp-controller="user" onclick="addpopup('@obj.Email')" asp-action="reject" asp-route-st="@obj.Email"
+                        class="btn btn-danger mx-2">reject</a>*@
+@*  </div>
+                           }
+                            else if (obj.StatusType == SType.Blocked)
+                            {
+                                <div class="w-75 btn-group" role="group">
+                                    <a asp-controller="user" asp-action="unblock" asp-route-st="@obj.Email"
+                                                               class="btn btn-primary mx-2">unblock</a>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="w-75 btn-group" role="group">
+                                    <a asp-controller="user" asp-action="block" asp-route-st="@obj.Email"
+                                                               class="btn btn-danger mx-2">block</a>
+                                </div>
+                            }
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+
+    </div>
+
+    <div id="modelpopup" class="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div id="mymodelcontent">
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section Scripts
+    {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
+<script>
+    function addpopup(email) {
+
+
+        $.ajax({
+            url: '/User/User/Popup',
+            type: "GET",
+            data: "email=" + email,
+            success: function (result) {
+
+                $("#mymodelcontent").html(result);
+                $("#modelpopup").show();
+            },
+            error: function (err) {
+                console.log(err);
+
+            }
+        });
+    }
+    function rejectData(Reason) {
+        debugger;
+        var email = document.getElementById("email").value;
+        var Reason = document.getElementById("Reason").value;
+
+        $.ajax({
+            url: '/User/User/Reject',
+            type: "POST",
+            data: { 'email': email, 'Reason': Reason },
+            success: function (result) {
+                debugger;
+                console.log(result);
+                $("body").html(result);
+            },
+            error: function (err) {
+                debugger;
+                console.log(err);
+
+            }
+        });
+
+    }
+
+</script>*@
