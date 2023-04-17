@@ -1,0 +1,102 @@
+﻿@model IEnumerable<Product>
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+
+
+
+
+<div class=" row pt-4">
+    <div class="col-6">
+        <h1>Dealer</h1>
+    </div>
+    <div class=" col-6 text-end">
+  @*      <div>
+            <a asp-area="User" asp-controller="Product" asp-action="AddProduct" class="btn btn-primary">
+                <i class="bi bi-person-plus-fill"></i> &nbsp; Add Product
+            </a>
+        </div>*@
+    </div>
+</div>
+
+<div class="container p-3">
+    <div class=" row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Product List </h2>
+
+        </div>
+    </div>
+
+
+
+
+    <br /><br />
+
+
+    <table class="table table-bordered table-striped" style="width:100%">
+        <thead>
+            <tr>
+
+                <th>
+                    Product Name
+                </th>
+                <th>
+                    Price
+                </th>
+                <th>
+                    Quantity
+                </th>
+                <th>
+                    Discounted-Amt
+                </th>
+                <th>
+                    IsActive
+                </th>
+              
+                <th>Action</th>
+
+            </tr>
+
+        </thead>
+        <tbody>
+            @foreach (var obj in Model)
+            {
+                <tr>
+
+                    <td width="10%">
+                        @obj.Name
+                    </td>
+                    <td width="10%">
+                        @obj.Price
+                    </td>
+                    <td width="10%">
+                        @obj.Quantity
+                    </td>
+                    @if (obj.DiscountAmount == null || obj.DiscountAmount == 0)
+                    {
+                        <td width="15%"> 
+                           No Discount
+                        </td>
+                    }
+                    else
+                    {
+                        <td width="15%">
+                            @obj.DiscountAmount
+                        </td>
+                    }
+                    @if (obj.IsActive == true)
+                    {
+                        <td class="text-success" width="5%">
+                            Active
+                        </td>
+                    }
+                    else
+                    {
+                        <td class="text-danger" width="5%">
+                            DeActive
+                        </td>
+                    }

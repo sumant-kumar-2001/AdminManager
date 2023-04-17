@@ -87,55 +87,80 @@ namespace AdminManager.Areas.User.Controllers
         {
          var   currentrole = HttpContext.Session.GetString("UserRole");
             var product = _context.Products.Find(id);
-            if (discount.DiscountType == "Fixed Amount")
+
+            if (ModelState.IsValid)
             {
-                discount = new Discount
+
+                if (discount.ValidFrom > discount.ValidTo)
                 {
-                    DiscountType = discount.DiscountType,
-                    ProductId = product.ProductId,
-                    ValidFrom = discount.ValidFrom,
-                    ValidTo = discount.ValidTo,
-                    DiscountAmount = discount.DiscountAmount,
-                };
-               
-            }
-            else
-            {
-                discount = new Discount
+                    ModelState.AddModelError("discount.ValidTo", "ToDate is Must be greater than FromDate");
+                    return View(discount);
+
+                }
+
+                    if (discount.DiscountType == "Fixed Amount")
+                    {
+                    if(discount.DiscountAmount > product.Price)
+                    {
+                        ModelState.AddModelError("discount.DiscountAmount","DiscountAmount can't be greater than price of product");
+                        return View(discount);
+                    }
+                        discount = new Discount
+                        {
+                            DiscountType = discount.DiscountType,
+                            ProductId = product.ProductId,
+                            ValidFrom = discount.ValidFrom,
+                            ValidTo = discount.ValidTo,
+                            DiscountAmount = discount.DiscountAmount,
+                        };
+
+                    }
+                    else
+                    {
+                    if (discount.DiscountAmount >100)
+                    {
+                        ModelState.AddModelError("discount.DiscountAmount", "Amount can't be dicounted more than 100%");
+                        return View(discount);
+                    }
+
+                    discount = new Discount
+                        {
+                            DiscountType = discount.DiscountType,
+                            ProductId = product.ProductId,
+                            ValidFrom = discount.ValidFrom,
+                            ValidTo = discount.ValidTo,
+                            DiscountAmount = (product.Price * discount.DiscountAmount) / 100
+                        };
+                  
+                }
+                product.DiscountAmount = product.Price - discount.DiscountAmount;
+
+                var ExistDiscount = _context.discount.Where(x => x.ProductId == product.ProductId).FirstOrDefault();
+                if (ExistDiscount == null)
                 {
-                    DiscountType = discount.DiscountType,
-                    ProductId = product.ProductId,
-                    ValidFrom = discount.ValidFrom,
-                    ValidTo = discount.ValidTo,
-                    DiscountAmount = (product.Price * discount.DiscountAmount) / 100
-                };
-            }
-            product.DiscountAmount = product.Price - discount.DiscountAmount;
-
-            var ExistDiscount = _context.discount.Where(x => x.ProductId == product.ProductId).FirstOrDefault();
-            if (ExistDiscount == null )
-            {
-                _context.discount.Add(discount);
-                _context.SaveChanges();
-            }
-            else
-            {
-                _context.discount.Update(discount);
-                _context.SaveChanges();
-            }
+                    _context.discount.Add(discount);
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    _context.discount.Update(discount);
+                    _context.SaveChanges();
+                }
 
 
-           
 
-            if (currentrole == "SuperAdmin" || currentrole == "Admin")
-            {
-                return RedirectToAction("AllProduct", "User", "User");
-            }
-            else
-            {
-                return RedirectToAction("Dealer", "User", "User");
 
+                if (currentrole == "SuperAdmin" || currentrole == "Admin")
+                {
+                    return RedirectToAction("AllProduct", "User", "User");
+                }
+                else
+                {
+                    return RedirectToAction("Dealer", "User", "User");
+
+                }
             }
+            return View(discount);
         }
 
 
@@ -165,12 +190,14 @@ namespace AdminManager.Areas.User.Controllers
 
 
         [HttpPost]
-        public async Task <IActionResult> AddProduct( Product product ,IFormFile? file)
+        public async Task<IActionResult> AddProduct(Product product, IFormFile? file)
         {
 
 
             if (ModelState.IsValid)
             {
+                ViewBag.Id = HttpContext.Session.GetString("UserId");
+
                 string wwwRootPath = _webHostEnvironment.WebRootPath;
                 if (file != null)
                 {
@@ -196,37 +223,36 @@ namespace AdminManager.Areas.User.Controllers
                     }
                     product.ImageUrl = @"\Images\Products\" + fileName;
                 }
+
+                if (product.ProductId == 0)
+                {
+                    product.UserId = ViewBag.Id;
+                    _context.Products.Add(product);
+                    _context.SaveChanges();
+                    return RedirectToAction("Dealer", "User", "User");
+
+                }
+                else
+                {
+                    _context.Products.Update(product);
+                    _context.SaveChanges();
+                    return RedirectToAction("Dealer", "User", "User");
+
+                }
             }
+
             return View(product);
+
             //product = new Product()
             //{
             //    UserId = ViewBag.Id,
             //    Price = product.Price,
-            //    Quantity= product.Quantity,
-            //    ImageUrl= product.ImageUrl,
-            //    Description = product.Description,  
+            //    Quantity = product.Quantity,
+            //    ImageUrl = product.ImageUrl,
+            //    Description = product.Description,
             //    Name = product.Name
 
             //};
-
-            ViewBag.Id = HttpContext.Session.GetString("UserId");
-
-            if (product.ProductId == 0)
-            {
-                 product.UserId = ViewBag.Id;
-                _context.Products.Add(product);
-                _context.SaveChanges();
-                return RedirectToAction("Dealer", "User", "User");
-
-            }
-            else
-            {
-                _context.Products.Update(product);
-                _context.SaveChanges();
-                return RedirectToAction("Dealer", "User", "User");
-
-            }         
-            
         }
 
     }

@@ -14,11 +14,11 @@
         <h1>Dealer</h1>
     </div>
     <div class=" col-6 text-end">
-        <div>
+  @*      <div>
             <a asp-area="User" asp-controller="Product" asp-action="AddProduct" class="btn btn-primary">
                 <i class="bi bi-person-plus-fill"></i> &nbsp; Add Product
             </a>
-        </div>
+        </div>*@
     </div>
 </div>
 
@@ -50,6 +50,9 @@
                     Quantity
                 </th>
                 <th>
+                    Discounted-Amt
+                </th>
+                <th>
                     IsActive
                 </th>
               
@@ -72,6 +75,18 @@
                     <td width="10%">
                         @obj.Quantity
                     </td>
+                    @if (obj.DiscountAmount == null || obj.DiscountAmount == 0)
+                    {
+                        <td width="15%"> 
+                           No Discount
+                        </td>
+                    }
+                    else
+                    {
+                        <td width="15%">
+                            @obj.DiscountAmount
+                        </td>
+                    }
                     @if (obj.IsActive == true)
                     {
                         <td class="text-success" width="5%">
@@ -106,4 +121,6 @@
             }
         </tbody>
     </table>
+    <a asp-area="User" asp-controller="User" asp-action="Back" 
+       class="btn btn-outline-dark mx-2"> <i class="bi bi-pencil-square"></i> Back </a>
 </div>

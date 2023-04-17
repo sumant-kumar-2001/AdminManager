@@ -1,0 +1,43 @@
+﻿@model AdminManager.Models.Login
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h1>Login</h1>
+
+
+
+<form asp-action="Login" method="post">
+    <div class="border p-3 mt-4" style="width:50%">
+        <div class="row pb-2">
+            <h2 class="text-primary">Login </h2>
+            <hr />
+
+        </div>
+
+
+        <div class="mb-3">
+            <label asp-for="Email"></label>
+            <input asp-for="Email" class="form-control" required />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <br />
+        <div class="mb-3">
+            <label asp-for="Password"></label>
+            <input type="password" asp-for="Password" class="form-control" required />
+            <span asp-validation-for="Password" class="text-danger"></span>
+
+        </div>
+        <br />
+        <div class="col-12">
+            <button type="submit" class="btn btn-outline-primary">Login</button>
+            <label class="btn-outline-info">
+                <input type="checkbox" checked="checked" name="remember"> Remember me
+            </label>
+            @*<div class="container" style="background-color:#f1f1f1">*@
+            <button type="button" class="cancelbtn btn btn-outline-danger">Cancel</button>
+            <a href="#">Forgot password?</a>
+        </div>
+    </div>
+
+</form>

@@ -101,13 +101,17 @@ namespace AdminManager.Areas.Customer.Controllers
                             Price = product.Price,
                             IsActive = product.IsActive,
                             Quantity = product.Quantity,
+                            DiscountAmount = product.DiscountAmount,
                         }));
 
             return View(products);
         }
+        public IActionResult Customer()
+        {
+            return View();
+        }
 
-
-
+        [Authorize]
         public IActionResult Allproduct()
         {
 
@@ -121,6 +125,7 @@ namespace AdminManager.Areas.Customer.Controllers
                             Price = product.Price,
                             IsActive = product.IsActive,
                             Quantity = product.Quantity,
+                            DiscountAmount = product.DiscountAmount,
                         }));
 
             return View(products);
@@ -132,9 +137,10 @@ namespace AdminManager.Areas.Customer.Controllers
         [HttpGet]
         public IActionResult SuperAdmin()
         {
-            var User = HttpContext.Session.GetString("user");
+            //var User = HttpContext.Session.GetString("user");
+           //var Customer = User.Identity.Name;
 
-            if (User == null)
+            if (!User.Identity.IsAuthenticated)
             {
                 return View("Page");
             }
@@ -154,11 +160,6 @@ namespace AdminManager.Areas.Customer.Controllers
 
             return View(admin);
         }
-
-
-
-
-
 
         public IActionResult RegisterDealers()
         {
@@ -309,7 +310,7 @@ namespace AdminManager.Areas.Customer.Controllers
                 {
                     await userManager.AddToRoleAsync(user, UserRoles.Dealer);
                 }
-                return Ok("Dealer created successfully!");
+                return View("Login");
 
             }
             return View("RegisterDealers");
@@ -347,7 +348,7 @@ namespace AdminManager.Areas.Customer.Controllers
                     await userManager.AddToRoleAsync(user, UserRoles.User);
                 }
 
-                return Ok("User created successfully!");
+                return View("Login");
             }
             else
             {
@@ -454,8 +455,24 @@ namespace AdminManager.Areas.Customer.Controllers
             return PartialView("_Popup");
         }
 
+        public IActionResult Back()
+        {
+            var currentrole = HttpContext.Session.GetString("UserRole");
+
+            if (currentrole == "SuperAdmin")
+            {
+                return RedirectToAction("SuperAdmin", "User", "User");
+            }
+            else if(currentrole == "Admin")
+            {
+                return RedirectToAction("Admin", "User", "User");
+            }
+            else
+            {
+                return RedirectToAction("Dealer", "User", "User");
+            }
+        }
 
 
-        
     }
 }

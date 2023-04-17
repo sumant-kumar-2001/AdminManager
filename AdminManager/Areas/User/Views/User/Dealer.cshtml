@@ -44,6 +44,9 @@
                     Quantity
                 </th>
                 <th>
+                    Discounted-Amt
+                </th>
+                <th>
                     IsActive
                 </th>
                 <th>Action</th>
@@ -65,6 +68,19 @@
                     <td width="10%">
                         @obj.Quantity
                     </td>
+                    @if(obj.DiscountAmount == 0 || obj.DiscountAmount == null)
+                    {
+                        <td width=" 15%">
+                            No Discount     
+                        </td>
+                    }
+                    else
+                    {
+                      <td width="15%">
+                        @obj.DiscountAmount
+                     </td>    
+                    }
+                    
                    
                     @if(obj.IsActive == true)
                     {
@@ -92,5 +108,7 @@
             }
         </tbody>
     </table>
+    <a asp-area="User" asp-controller="User" asp-action="Back"
+       class="btn btn-outline-dark mx-2"> <i class="bi bi-pencil-square"></i> Back </a>
 </div>
 

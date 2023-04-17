@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminManager.DAL", "AdminMa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminManager.Models", "AdmionManager.Models\AdminManager.Models.csproj", "{58969C52-E538-4AB4-8CAD-7CC87C80F7B0}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EcommerceFrontend", "EcommerceFrontend\EcommerceFrontend.csproj", "{FEC4E58D-54B2-49B0-AA91-C5B709CF4986}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{58969C52-E538-4AB4-8CAD-7CC87C80F7B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58969C52-E538-4AB4-8CAD-7CC87C80F7B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58969C52-E538-4AB4-8CAD-7CC87C80F7B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEC4E58D-54B2-49B0-AA91-C5B709CF4986}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEC4E58D-54B2-49B0-AA91-C5B709CF4986}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEC4E58D-54B2-49B0-AA91-C5B709CF4986}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEC4E58D-54B2-49B0-AA91-C5B709CF4986}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -5,11 +5,11 @@
 
 
 <form asp-action="RegisterDealer" method="post">
-  
-    <div class="container text-center  border p-3 mt-4">
+    <div class="border p-3 mt-4 ">
         <div class="row pb-2">
-            <h2 class="text-info">Register As Dealer</h2>
+            <h2 class="text-primary">Register As Dealer </h2>
             <hr />
+
         </div>
         <div class="mb-3">
             <label asp-for="Username"></label>
@@ -48,13 +48,9 @@
             <span asp-validation-for="PhoneNumber" class="text-danger"></span>
         </div>
         <br />
-        <div>
-            <button type="submit" class="btn btn-outline-primary">Register</button>
-        </div>
-        <br />
-        <div class="container" style="background-color:#f1f1f1">
-            <button type="button" class="cancelbtn">Cancel</button>
-            <span class="psw">Forgot <a href="#">password?</a></span>
+        <div class=" col-12 text-center">
+                <button type="submit" class="btn btn-outline-primary">Register</button>
+                <button type="button" class="cancelbtn">Cancel</button> 
         </div>
     </div>
 

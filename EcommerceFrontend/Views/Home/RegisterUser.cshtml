@@ -1,0 +1,60 @@
+﻿@model AdminManager.Models.Register
+@{
+    ViewData["Title"] = "RegisterUser";
+}
+
+<h1>RegisterUser</h1>
+
+<form asp-action="RegisterUser" method="post">
+
+    <div class="border p-3 mt-4 ">
+        <div class="row pb-2">
+            <h2 class="text-primary">Register As User </h2>
+            <hr />
+
+        </div>
+        <div class="mb-3">
+            <label asp-for="Username"></label>
+            <input asp-for="Username" class="form-control" required />
+            <span asp-validation-for="Username" class="text-danger"></span>
+        </div>
+        <br />
+        <div class="mb-3">
+            <label asp-for="Email"></label>
+            <input type="Email" asp-for="Email" class="form-control" required />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Password"></label>
+            <input type="password" asp-for="Password" class="form-control" required />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="City"></label>
+            <input asp-for="City" class="form-control" required />
+            <span asp-validation-for="City" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="State"></label>
+            <input asp-for="State" class="form-control" required />
+            <span asp-validation-for="State" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="PinCode"></label>
+            <input asp-for="PinCode" class="form-control" required />
+            <span asp-validation-for="PinCode" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="PhoneNumber"></label>
+            <input asp-for="PhoneNumber" class="form-control" required />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+        <br />
+        <div class="col-12 text-center">
+            <button type="submit" class="btn btn-primary">Register</button>
+            <button type="button" class="cancelbtn">Cancel</button>
+        </div>
+
+    </div>
+
+</form>
