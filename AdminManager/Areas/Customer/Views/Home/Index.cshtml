@@ -27,7 +27,14 @@
                                 <p>List Price: <strike><b>$@product.Price.ToString("0.00")</b></strike></p>
                             </div>
                             <div class="pl-1">
-                                <p>As low as: <b>$@product.DiscountAmount.ToString("0.00")</b></p>
+                                @if(product.DiscountAmount ==  null  || product.DiscountAmount == 0)
+                                {
+                                    <p> Discount Amt: <b>Rs-@product.Price </b></p>
+                                }
+                                else
+                                {
+                                 <p>Discount Amt- <b>Rs-@product.DiscountAmount.ToString("0.00")</b></p>
+                                }
                             </div>
                         </div>
                         <div>

@@ -1,18 +1,29 @@
-﻿@model IEnumerable<Product>
-
+﻿@using AdminManager.Models.ViewModels;
+@model PageList<Product>
+@*Pagination*@
 @{
-    ViewData["Title"] = "Allproduct";
-}
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    var dealer = ViewBag.Dealer;
+}  
+  
 
+
+
+<form method="get" asp-area="User" asp-controller="User" asp-action="Allproduct"  class="d-flex col-4">
+    <input  name ="data"value="@dealer" hidden/>
+    <input class="form-control me-sm-2" type="text" placeholder="Search By Product Name..." name="term" value="@ViewBag.SearchStr">
+    <button class="btn btn-secondary my-2 my-sm-0 me-sm-2" type="submit">Search</button>
+</form>
+
+
+@*
 <h1>Allproduct</h1>
-
-
-
-
+*@
 <div class=" row pt-4">
     <div class="col-6">
-        <h1>Dealer</h1>
-    </div>
+@*        <h1>Dealer</h1>
+*@    </div>
     <div class=" col-6 text-end">
   @*      <div>
             <a asp-area="User" asp-controller="Product" asp-action="AddProduct" class="btn btn-primary">
@@ -40,24 +51,30 @@
         <thead>
             <tr>
 
-                <th>
+                <th class="text-info">
                     Product Name
                 </th>
-                <th>
+                <th class="text-info">
                     Price
                 </th>
-                <th>
+                <th class="text-info">
                     Quantity
                 </th>
-                <th>
+                <th class="text-info">
                     Discounted-Amt
                 </th>
-                <th>
+                <th class="text-info">
                     IsActive
                 </th>
+                <th class="text-info">
+                    Dealer
+                </th>
+                <th class="text-info">
+                    Image
+                </th>
               
-                <th>Action</th>
-
+                <th class="text-info">Action</th>
+                
             </tr>
 
         </thead>
@@ -69,21 +86,22 @@
                     <td width="10%">
                         @obj.Name
                     </td>
-                    <td width="10%">
+                    <td width="5%">
                         @obj.Price
                     </td>
-                    <td width="10%">
+                    <td width="7%">
                         @obj.Quantity
                     </td>
+                  
                     @if (obj.DiscountAmount == null || obj.DiscountAmount == 0)
                     {
-                        <td width="15%"> 
+                        <td width="12%"> 
                            No Discount
                         </td>
                     }
                     else
                     {
-                        <td width="15%">
+                        <td width="7%">
                             @obj.DiscountAmount
                         </td>
                     }
@@ -99,28 +117,62 @@
                             DeActive
                         </td>
                     }
-                   
-
-                    <td width="20%">
-                        
-                        @if (obj.IsActive == true)
-                        {
-                            <a asp-area="User" asp-controller="Product" asp-action="UpdateIsActive" asp-route-Id="@obj.ProductId"
-                       class="btn btn-outline-danger mx-2"> <i class="bi bi-pencil-square"></i> DeActive </a>
-                        }
-                        else
-                        {
-                            <a asp-area="User" asp-controller="Product" asp-action="UpdateIsActive" asp-route-Id="@obj.ProductId"
-                       class="btn btn-outline-success mx-2"> <i class="bi bi-pencil-square"></i> Active </a>
-                        }
-                        <a asp-area="User" asp-controller="Product" asp-action="AddDiscount" asp-route-Id="@obj.ProductId"
-                       class="btn btn-outline-primary mx-2"> <i class="bi bi-pencil-square"></i> Add-Discount </a>
+                    <td width="15%">
+                        @obj.UserId
                     </td>
+                    <td width="12%"> <img     src="@obj.ImageUrl"  style="width:200px"/></td>
+
+                   
+                        @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+                   
+                        {
+                        <td width="10%">
+                            @if (obj.IsActive == true)
+                            {
+                                <a asp-area="User" asp-controller="Product" asp-action="UpdateIsActive" asp-route-Id="@obj.ProductId"
+                                 class="btn btn-outline-danger mx-2"> <i class="bi bi-pencil-square"></i> DeActive </a>
+                            }
+                            else
+                            {
+                                <a asp-area="User" asp-controller="Product" asp-action="UpdateIsActive" asp-route-Id="@obj.ProductId"
+                                 class="btn btn-outline-success mx-2"> <i class="bi bi-pencil-square"></i> Active </a>
+                            }
+                        </td>
+
+                        }
+                 
+
+                        @if (User.IsInRole("Dealer"))
+               
+
+                        {
+                        <td width="30%">
+                            <div>
+                                <a asp-area="User" asp-controller="Product" asp-action="AddDiscount" asp-route-Id="@obj.ProductId"
+                                   class="btn btn-outline-primary mx-2"> <i class="bi bi-pencil-square"></i> Add-Discount </a>
+                                <a asp-area="User" asp-controller="Product" asp-action="AddProduct" asp-route-Id="@obj.ProductId"
+                                   class="btn btn-outline-success mx-2"> <i class="bi bi-pencil-square"></i> Edit </a>
+                                <a asp-area="User" asp-controller="Product" asp-action="DeleteProduct" asp-route-Id="@obj.ProductId"
+                                   class="btn btn-outline-danger mx-2"> <i class="bi bi-pencil-square"></i> Delete </a>
+                            </div>
+                          </td>
+                        }
+                     
+
 
                 </tr>
             }
         </tbody>
     </table>
-    <a asp-area="User" asp-controller="User" asp-action="Back" 
+  <div>
+        <a asp-area="User" asp-controller="User" asp-action="Allproduct" asp-route-Page="@(Model.PageIndex - 1)" class="btn btn-default @prevDisabled" asp-route-data="@dealer" asp-route-term="@ViewBag.SearchStr">
+            Previous
+        </a>
+        <a asp-area="User" asp-controller="User" asp-action="Allproduct" asp-route-Page="@(Model.PageIndex + 1)" class="btn btn-default  @nextDisabled" asp-route-data="@dealer" asp-route-term="@ViewBag.SearchStr">
+            Next
+        </a>
+  </div>
+    <br />
+    <a asp-area="User" asp-controller="User" asp-action="Back"
        class="btn btn-outline-dark mx-2"> <i class="bi bi-pencil-square"></i> Back </a>
 </div>

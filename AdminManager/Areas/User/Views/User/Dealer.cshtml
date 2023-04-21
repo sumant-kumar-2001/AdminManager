@@ -1,12 +1,14 @@
-﻿
-@model IEnumerable<Product>
-
-
-
+﻿@using AdminManager.Models.ViewModels;
+@model PageList<Product>
+@*Pagination*@
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
 <div class=" row pt-4">
     <div class="col-6">
-        <h1>Dealer</h1>
-    </div>
+@*        <h1>Dealer</h1>
+*@    </div>
     <div class=" col-6 text-end">
         <div>
             <a asp-area="User" asp-controller="Product" asp-action="AddProduct" class="btn btn-primary">
@@ -49,6 +51,7 @@
                 <th>
                     IsActive
                 </th>
+                <th>Image</th>
                 <th>Action</th>
 
             </tr>
@@ -94,12 +97,14 @@
                             DeActive
                         </td>
                     }
+                    <td width="12%"> <img src="@obj.ImageUrl" style="width:200px" /></td>
+
 
                     <td width="20%" >
                         <a asp-area="User" asp-controller="Product" asp-action="AddProduct" asp-route-Id="@obj.ProductId"
-                       class="btn btn-outline-success mx-2"> <i class="bi bi-pencil-square"></i> Edit </a>
+                       class="btn btn-outline-success mx-2"> <i class="bi bi-pencil-square"></i> Edit </a> 
                         <a asp-area="User" asp-controller="Product" asp-action="DeleteProduct" asp-route-Id="@obj.ProductId"
-                       class="btn btn-outline-danger mx-2"> <i class="bi bi-pencil-square"></i> Delete </a>                 
+                       class="btn btn-outline-danger mx-2"> <i class="bi bi-pencil-square"></i> Delete </a>     &nbsp;            
                         <a asp-area="User" asp-controller="Product" asp-action="AddDiscount" asp-route-Id="@obj.ProductId"
                        class="btn btn-outline-primary mx-2"> <i class="bi bi-pencil-square"></i> Add-Discount </a>
                     </td>
@@ -108,6 +113,17 @@
             }
         </tbody>
     </table>
+    <div class="justify-content-end">
+     <a    asp-area="User" asp-controller="User" asp-action="Dealer" asp-route-Page="@(Model.PageIndex - 1)" class="btn btn-info @prevDisabled">
+         Previous
+    </a>
+    &nbsp;
+    <a asp-area="User"  asp-controller ="User" asp-action="Dealer" asp-route-Page="@(Model.PageIndex + 1)" class="btn btn-info @nextDisabled">
+        Next 
+        
+    </a>
+    </div>
+    <br />
     <a asp-area="User" asp-controller="User" asp-action="Back"
        class="btn btn-outline-dark mx-2"> <i class="bi bi-pencil-square"></i> Back </a>
 </div>

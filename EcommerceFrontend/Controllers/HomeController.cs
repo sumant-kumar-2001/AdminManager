@@ -5,6 +5,7 @@ using AdminManager.Models.Email;
 using EcommerceFrontend.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -27,8 +28,11 @@ namespace EcommerceFrontend.Controllers
             this.signInManager = signInManager;
         }
 
-        public IActionResult Index( string? term)
+        public IActionResult Index( string? term )
         {
+        
+
+
             if (term == null)
             {
                 IEnumerable<Product> products = _context.Products.Where(x => x.IsActive == true).ToList();
@@ -112,7 +116,7 @@ namespace EcommerceFrontend.Controllers
                 {
                     await _userManager.AddToRoleAsync(user, UserRoles.User);
                 }
-
+                TempData["error"] = "User Registered Successfully";
                 return View("Login");
             }
             else

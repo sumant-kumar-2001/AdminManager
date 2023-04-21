@@ -1,17 +1,17 @@
 ﻿
 @{
-    ViewData["Title"] = "Dealers";
+     ViewData["Title"] = "Dealers";
 }
 
 
 <div class=" row pt-4">
     <div class="col-6">
-        <h1>Admin</h1>
-    </div>
+@*        <h1>Admin</h1>
+*@    </div>
     <div class=" col-6 text-end">
         <div>
             <a asp-area="User" asp-controller="User" asp-action="AllProduct" class="btn btn-primary">
-        <i class="bi bi-person-plus-fill"></i> &nbsp; View As Dealer
+        <i class="bi bi-person-plus-fill"></i> &nbsp; Product List
     </a>
     </div>
     </div>
@@ -67,8 +67,6 @@
                            class="btn btn-outline-success mx-2"> <i class="bi bi-pencil-square"></i> Approve </a>
 
                                 <button type="button" onclick="addpopup('@obj.Email')" class="btn btn-outline-secondary">Reject</button>
-                               @* <a asp-area="User" asp-controller="User" asp-action="Reject" asp-route-data="@obj.UserName"
-                           class="btn btn-outline-secondary mx-2"> <i class="bi bi-trash-fill"></i> Reject</a>*@
                             </div>
                         }
                         else if (obj.StatusType == SType.Blocked.ToString())
@@ -86,6 +84,10 @@
                             </div>
                         }
                     </td>
+                    <td>
+                        <a asp-area="User" asp-controller="User" asp-action="AllProduct" asp-route-data="@obj.Email"
+                       class="btn btn-outline-info mx-2"> <i class="bi bi-pencil-square"></i> Products </a>
+                   </td>
                 </tr>
             }
         </tbody>
@@ -156,7 +158,18 @@
 
             }
         });
-
     }
+
+     function CloseEvent() {
+            $.ajax({
+                success: function (result) {
+                    $("#modelpopup").hide();
+                },
+                error: function (err) {
+                    console.log(err);
+
+                }
+            });
+        }
 
 </script>

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Product>
+﻿@model IEnumerable<AdminManager.Models.Product>
 
 @{
     ViewData["Title"] = "Details";
@@ -53,12 +53,6 @@
                 <th>
                     Discounted-Amt
                 </th>
-                <th>
-                    IsActive
-                </th>
-              
-                <th>Action</th>
-
             </tr>
 
         </thead>
@@ -88,15 +82,6 @@
                             @obj.DiscountAmount
                         </td>
                     }
-                    @if (obj.IsActive == true)
-                    {
-                        <td class="text-success" width="5%">
-                            Active
-                        </td>
-                    }
-                    else
-                    {
-                        <td class="text-danger" width="5%">
-                            DeActive
-                        </td>
-                    }
+                 </tr>
+            }
+                

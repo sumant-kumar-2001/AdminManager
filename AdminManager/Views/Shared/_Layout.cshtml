@@ -17,11 +17,12 @@
     <title>@ViewData["Title"] - AdminManager</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css" />
     <link rel="stylesheet" href="~/AdminManager.styles.css" asp-append-version="true" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 ">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">AdminManager</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -31,10 +32,10 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Customer"  asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-primary" asp-area="Customer"  asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Customer" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-primary" asp-area="Customer" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                        @*@if (user == null || user =="")*@
                        @if(!User.Identity.IsAuthenticated)
@@ -48,23 +49,37 @@
                                 <li class="nav-item">
                                 <a class="nav-link text-primary" asp-area="User" asp-controller="User" asp-action="RegisterUsers">Register-User</a>
                             </li>
-                        }
-                        else if(User.Identity.IsAuthenticated)
-                        @*else if (user != null)*@
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-danger" asp-area="User" asp-controller="User" asp-action="Logout"> 
-                                    Logout</a>
-                                
-                            </li>
+                             
                         }
                     </ul>
+                        @if(User.Identity.IsAuthenticated)
+                        @*else if (user != null)*@
+                        {
+                            <div style="margin-right:500px">
+                            Welcome  @User.Identity.Name
+                            </div>
+                           
+                            <div >                          
+                                <a class="nav-link text-success" asp-area="User" asp-controller="User" asp-action="Back">
+                                DashBoard
+                                </a>
+                            </div>
+                            <div >                            
+                                <a class="nav-link text-danger" asp-area="User" asp-controller="User" asp-action="Logout">
+                                   &nbsp;  Logout
+                                </a>
+                            </div>
+
+                     
+                        }
+                   
                 </div>
             </div>
         </nav>
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            <partial name="_Notification" />
             @RenderBody()
         </main>
     </div>
@@ -77,6 +92,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -26,7 +26,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseMySQL(
 //Session
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(1);
+    options.IdleTimeout = TimeSpan.FromHours(1);
 });
 
 // For Identity  

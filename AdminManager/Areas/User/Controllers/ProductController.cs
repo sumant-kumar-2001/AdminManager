@@ -5,6 +5,7 @@ using System.IO;
 using System;
 using Microsoft.AspNetCore.Identity;
 using AdminManager.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using AdminManager.Models.Email;
 using Org.BouncyCastle.Bcpg;
 using System.Linq;
@@ -39,6 +40,9 @@ namespace AdminManager.Areas.User.Controllers
             _httpContextAccessor = httpContextAccessor;
             _webHostEnvironment= webHostEnvironment;
         }
+
+
+        [Authorize(Roles = "Dealer")]
         [HttpGet]
         public IActionResult AddProduct(int? id)
         {
@@ -55,7 +59,7 @@ namespace AdminManager.Areas.User.Controllers
 
         }
 
-
+        [Authorize(Roles = "SuperAdmin,Admin")]
         public IActionResult UpdateIsActive(int? id)
         {
             Product product = _context.Products.Find(id);
@@ -74,14 +78,14 @@ namespace AdminManager.Areas.User.Controllers
 
 
 
-
+        [Authorize(Roles = "Dealer")]
         [HttpGet]
         public IActionResult AddDiscount()
         {
             return View();
         }
 
-
+        [Authorize(Roles = "Dealer")]
         [HttpPost]
         public IActionResult AddDiscount(Discount discount , int? id)
         {
@@ -124,7 +128,7 @@ namespace AdminManager.Areas.User.Controllers
                     }
 
                     discount = new Discount
-                        {
+                        { 
                             DiscountType = discount.DiscountType,
                             ProductId = product.ProductId,
                             ValidFrom = discount.ValidFrom,
@@ -147,28 +151,18 @@ namespace AdminManager.Areas.User.Controllers
                     _context.SaveChanges();
                 }
 
+                return RedirectToAction("Allproduct", "User", "User");
 
 
-
-                if (currentrole == "SuperAdmin" || currentrole == "Admin")
-                {
-                    return RedirectToAction("AllProduct", "User", "User");
-                }
-                else
-                {
-                    return RedirectToAction("Dealer", "User", "User");
-
-                }
             }
             return View(discount);
         }
 
 
-
-        [HttpDelete]
-        public IActionResult DeleteProduct(int ? id)
+        [Authorize(Roles = "Dealer")]
+        public IActionResult DeleteProduct(int Id)
         {
-            Product product = _context.Products.Find(id);
+            Product product = _context.Products.Find(Id);
 
             if(product == null)
             {
@@ -180,15 +174,31 @@ namespace AdminManager.Areas.User.Controllers
                 {
                     System.IO.File.Delete(oldImagePath);
                 }
-            _context.Products.Remove(product);
+
+            //foreach (Discount item in _context.discount.Where(x => x.ProductId == Id))
+            //{
+            //    _context.discount.Remove(item);
+            //    _context.SaveChanges();
+
+
+            //}
+
+
+            _context.discount.Where(p => p.ProductId == Id)
+              .ToList().ForEach(p => _context.discount.Remove(p));
             _context.SaveChanges();
-            return RedirectToAction("Dealer", "User", "User");
+            _context.Products.Remove(product);
+
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Allproduct", "User", "User");
 
         }
 
 
 
-
+        [Authorize(Roles = "Dealer")]
         [HttpPost]
         public async Task<IActionResult> AddProduct(Product product, IFormFile? file)
         {
@@ -196,7 +206,7 @@ namespace AdminManager.Areas.User.Controllers
 
             if (ModelState.IsValid)
             {
-                ViewBag.Id = HttpContext.Session.GetString("UserId");
+                ViewBag.Dealer = HttpContext.Session.GetString("Dealer");
 
                 string wwwRootPath = _webHostEnvironment.WebRootPath;
                 if (file != null)
@@ -226,19 +236,18 @@ namespace AdminManager.Areas.User.Controllers
 
                 if (product.ProductId == 0)
                 {
-                    product.UserId = ViewBag.Id;
+                    product.UserId = ViewBag.Dealer;
                     _context.Products.Add(product);
-                    _context.SaveChanges();
-                    return RedirectToAction("Dealer", "User", "User");
+                    TempData["success"] = "Product Added Successfully";
 
                 }
                 else
                 {
-                    _context.Products.Update(product);
-                    _context.SaveChanges();
-                    return RedirectToAction("Dealer", "User", "User");
-
+                    _context.Products.Update(product);             
+                    TempData["success"] = "Product Updated Successfully";
                 }
+                _context.SaveChanges();
+                return RedirectToAction("Allproduct", "User", "User");
             }
 
             return View(product);

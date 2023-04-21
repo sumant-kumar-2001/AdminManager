@@ -2,13 +2,15 @@
 @{
     ViewData["Title"] = "AddDiscount";
 }
-@Html.ValidationSummary(false, "", new { @class = "text-danger" })
+@*@Html.ValidationSummary(false, "", new { @class = "text-danger" })
+*@
+<form asp-action="AddDiscount" method="post">          
 
-<h1>AddDiscount</h1>
-
-<form asp-action="AddDiscount" method="post">
-    <div>
-    <div class="container text-center">
+        <div class="border p-3 mt-4  ">
+              <div class="row pb-2">
+                  <h2 class="text-primary">Add Discount </h2>
+                     <hr />
+              </div>
         <div class="mb-3">
             <label asp-for="ValidFrom"></label>
             <input asp-for="ValidFrom" class="form-control" />
@@ -23,7 +25,7 @@
         <div class="mb-3 ">
                         <label asp-for="DiscountType"></label>
                     <select asp-for="DiscountType" class="form-select">
-                            <option selected>--Select Type--</option>
+                            <option selected disabled>--Select Type--</option>
                            <option value="Fixed Amount">Fixed Amount</option>
                             <option value="Percentage">Percentage</option>
                         </select>
@@ -36,11 +38,8 @@
             <span asp-validation-for="DiscountAmount" class="text-danger"></span>
         </div>
             <button type="submit" class="btn btn-primary">Add-Discount</button>
+        <a asp-area="User" asp-controller="User" asp-action="Back"
+           class="btn btn-outline-dark mx-2"> <i class="bi bi-pencil-square"></i> Back </a>
         </div>
-        <br />
-        <div class="container" style="background-color:#f1f1f1">
-            <button type="button" class="cancelbtn">Cancel</button>
-        </div>
-    </div>
-
+       
 </form>

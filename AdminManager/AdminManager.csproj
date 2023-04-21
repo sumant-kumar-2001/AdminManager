@@ -9,8 +9,10 @@
   <ItemGroup>
     <None Remove="Areas\User\Controllers\ouaxk3ou.5tt~" />
     <None Remove="Areas\User\Controllers\UserController.cs~RF571484c4.TMP" />
+    <None Remove="Areas\User\Controllers\UserController.cs~RF65888dc.TMP" />
     <None Remove="Areas\User\Views\Product\cbijuru0.mig~" />
     <None Remove="Areas\User\Views\User\oojcwlrp.nql~" />
+    <None Remove="Views\Shared\y4r0xlhz.vsv~" />
   </ItemGroup>
 
   <ItemGroup>

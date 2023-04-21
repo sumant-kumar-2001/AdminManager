@@ -1,5 +1,13 @@
 ﻿@model IEnumerable<AdminManager.Models.Product>
 
+
+
+
+
+
+
+
+
 <form method="get" asp-controller="Home" asp-action="Index" class="d-flex col-4">
     <input class="form-control me-sm-2" type="text" placeholder="Search By Product Name..." name="term" value="@ViewBag.SearchStr">
     <button class="btn btn-secondary my-2 my-sm-0 me-sm-2" type="submit">Search</button>
@@ -20,10 +28,25 @@
                                 <p class=" card-title  text-secondary"> <b>@product.Description</b></p>
                             </div>
                             <div class="pl-1">
-                                <p>List Price: <strike><b>$@product.Price.ToString("0.00")</b></strike></p>
+                                @if(product.DiscountAmount == null || product.DiscountAmount == 0)
+                                {
+                                    <p> Price:<b>Rs- @product.Price.ToString("0.00")</b></p>
+
+                                }
+                                else
+                                {
+                                 <p> Price: <strike><b>Rs- @product.Price.ToString("0.00")</b></strike></p>
+                                }
                             </div>
                             <div class="pl-1">
-                                <p>Discounted Amt: <b>$@product.DiscountAmount.ToString("0.00")</b></p>
+                                @if (product.DiscountAmount == null || product.DiscountAmount == 0)
+                                {
+                                    <p> Discount Amt: <b>No Discount </b></p>
+                                }
+                                else
+                                {
+                                    <p>Discount Amt- <b>Rs-@product.DiscountAmount.ToString("0.00")</b></p>
+                                }
                             </div>
                         </div>
                         <div>
