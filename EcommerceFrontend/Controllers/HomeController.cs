@@ -61,7 +61,7 @@ namespace EcommerceFrontend.Controllers
         public async Task<IActionResult> Login(Login model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
-            var result = await signInManager.PasswordSignInAsync(user.UserName, model.Password, false, false);
+            var result = await signInManager.PasswordSignInAsync(user.User  Name, model.Password, false, false);
             var userRoles = await _userManager.GetRolesAsync(user);
             var currentrole = userRoles.FirstOrDefault();
 

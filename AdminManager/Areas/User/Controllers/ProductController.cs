@@ -29,7 +29,7 @@ namespace AdminManager.Areas.User.Controllers
 
         public ProductController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager,
             IConfiguration configuration, SignInManager<ApplicationUser> signInManager, ApplicationDbContext context,
-            IEmailSender emailSender, IHttpContextAccessor httpContextAccessor,IWebHostEnvironment webHostEnvironment )
+            IEmailSender emailSender, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
@@ -38,7 +38,7 @@ namespace AdminManager.Areas.User.Controllers
             _context = context;
             _emailSender = emailSender;
             _httpContextAccessor = httpContextAccessor;
-            _webHostEnvironment= webHostEnvironment;
+            _webHostEnvironment = webHostEnvironment;
         }
 
 
@@ -48,7 +48,7 @@ namespace AdminManager.Areas.User.Controllers
         {
             Product product = new Product();
             if (id == null || id == 0)
-            {          
+            {
                 return View(product);
             }
             else
@@ -63,7 +63,7 @@ namespace AdminManager.Areas.User.Controllers
         public IActionResult UpdateIsActive(int? id)
         {
             Product product = _context.Products.Find(id);
-            if(product.IsActive == true)
+            if (product.IsActive == true)
             {
                 product.IsActive = false;
             }
@@ -76,8 +76,6 @@ namespace AdminManager.Areas.User.Controllers
             return RedirectToAction("Allproduct", "User", "User");
         }
 
-
-
         [Authorize(Roles = "Dealer")]
         [HttpGet]
         public IActionResult AddDiscount()
@@ -87,9 +85,9 @@ namespace AdminManager.Areas.User.Controllers
 
         [Authorize(Roles = "Dealer")]
         [HttpPost]
-        public IActionResult AddDiscount(Discount discount , int? id)
+        public IActionResult AddDiscount(Discount discount, int? id)
         {
-         var   currentrole = HttpContext.Session.GetString("UserRole");
+            var currentrole = HttpContext.Session.GetString("UserRole");
             var product = _context.Products.Find(id);
 
             if (ModelState.IsValid)
@@ -102,40 +100,40 @@ namespace AdminManager.Areas.User.Controllers
 
                 }
 
-                    if (discount.DiscountType == "Fixed Amount")
+                if (discount.DiscountType == "Fixed Amount")
+                {
+                    if (discount.DiscountAmount > product.Price)
                     {
-                    if(discount.DiscountAmount > product.Price)
-                    {
-                        ModelState.AddModelError("discount.DiscountAmount","DiscountAmount can't be greater than price of product");
+                        ModelState.AddModelError("discount.DiscountAmount", "DiscountAmount can't be greater than price of product");
                         return View(discount);
                     }
-                        discount = new Discount
-                        {
-                            DiscountType = discount.DiscountType,
-                            ProductId = product.ProductId,
-                            ValidFrom = discount.ValidFrom,
-                            ValidTo = discount.ValidTo,
-                            DiscountAmount = discount.DiscountAmount,
-                        };
-
-                    }
-                    else
+                    discount = new Discount
                     {
-                    if (discount.DiscountAmount >100)
+                        DiscountType = discount.DiscountType,
+                        ProductId = product.ProductId,
+                        ValidFrom = discount.ValidFrom,
+                        ValidTo = discount.ValidTo,
+                        DiscountAmount = discount.DiscountAmount,
+                    };
+
+                }
+                else
+                {
+                    if (discount.DiscountAmount > 100)
                     {
                         ModelState.AddModelError("discount.DiscountAmount", "Amount can't be dicounted more than 100%");
                         return View(discount);
                     }
 
                     discount = new Discount
-                        { 
-                            DiscountType = discount.DiscountType,
-                            ProductId = product.ProductId,
-                            ValidFrom = discount.ValidFrom,
-                            ValidTo = discount.ValidTo,
-                            DiscountAmount = (product.Price * discount.DiscountAmount) / 100
-                        };
-                  
+                    {
+                        DiscountType = discount.DiscountType,
+                        ProductId = product.ProductId,
+                        ValidFrom = discount.ValidFrom,
+                        ValidTo = discount.ValidTo,
+                        DiscountAmount = (product.Price * discount.DiscountAmount) / 100
+                    };
+
                 }
                 product.DiscountAmount = product.Price - discount.DiscountAmount;
 
@@ -164,16 +162,16 @@ namespace AdminManager.Areas.User.Controllers
         {
             Product product = _context.Products.Find(Id);
 
-            if(product == null)
+            if (product == null)
             {
                 return Json(new { success = false, message = "Error While Deleting" });
             }
-            
-                var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, product.ImageUrl.TrimStart('\\'));
-                if (System.IO.File.Exists(oldImagePath))
-                {
-                    System.IO.File.Delete(oldImagePath);
-                }
+
+            var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, product.ImageUrl.TrimStart('\\'));
+            if (System.IO.File.Exists(oldImagePath))
+            {
+                System.IO.File.Delete(oldImagePath);
+            }
 
             //foreach (Discount item in _context.discount.Where(x => x.ProductId == Id))
             //{
@@ -188,8 +186,6 @@ namespace AdminManager.Areas.User.Controllers
               .ToList().ForEach(p => _context.discount.Remove(p));
             _context.SaveChanges();
             _context.Products.Remove(product);
-
-
             _context.SaveChanges();
 
             return RedirectToAction("Allproduct", "User", "User");
@@ -243,7 +239,7 @@ namespace AdminManager.Areas.User.Controllers
                 }
                 else
                 {
-                    _context.Products.Update(product);             
+                    _context.Products.Update(product);
                     TempData["success"] = "Product Updated Successfully";
                 }
                 _context.SaveChanges();
